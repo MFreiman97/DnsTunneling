@@ -1,0 +1,45 @@
+
+1. STATUS OF THIS MEMO
+
+This RFC describes the details of the domain system and protocol, and
+assumes that the reader is familiar with the concepts discussed in a
+companion RFC, "Domain Names - Concepts and Facilities" [RFC-1034].
+
+The domain system is a mixture of functions and data types which are an
+official protocol and functions and data types which are still
+experimental.  Since the domain system is intentionally extensible, new
+data types and experimental behavior should always be expected in parts
+of the system beyond the official protocol.  The official protocol parts
+include standard queries, responses and the Internet class RR data
+formats (e.g., host addresses).  Since the previous RFC set, several
+definitions have changed, so some previous definitions are obsolete.
+
+Experimental or obsolete features are clearly marked in these RFCs, and
+such information should be used with caution.
+
+The reader is especially cautioned not to depend on the values which
+appear in examples to be current or complete, since their purpose is
+primarily pedagogical.  Distribution of this memo is unlimited.
+
+                           Table of Contents
+
+  1. STATUS OF THIS MEMO                                              1
+  2. INTRODUCTION                                                     3
+      2.1. Overview                                                   3
+      2.2. Common configurations                                      4
+      2.3. Conventions                                                7
+          2.3.1. Preferred name syntax                                7
+          2.3.2. Data Transmission Order                              8
+          2.3.3. Character Case                                       9
+          2.3.4. Size limits                                         10
+  3. DOMAIN NAME SPACE AND RR DEFINITIONS                            10
+      3.1. Name space definitions                                    10
+      3.2. RR definitions                                            11
+          3.2.1. Format                                              11
+          3.2.2. TYPE values                                         12
+          3.2.3. QTYPE values                                        12
+          3.2.4. CLASS values                                        13
+
+
+
+Mockapetris                                                     [Page 1]
