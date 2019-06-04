@@ -1,6 +1,8 @@
 import base64
 
 
+#class Server
+
 def decode_from_base32(enc_mes):  #
     enc_mes = enc_mes.replace('.', '')
     b = bytes(enc_mes, 'utf-8')

