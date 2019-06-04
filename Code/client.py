@@ -9,7 +9,13 @@ class Client:
     when it sends a single file from the victim
     to the server via DNS messages
     """
+
     def __init__(self, path: str, label_len: int, record_len: int):
+        """
+        :param path: a path to the file that will send to the server
+        :param label_len: the max len between periods
+        :param record_len: the total len of one dns record
+        """
         self.path = path
         self.message = self.get_message()
         self.label_len = label_len
