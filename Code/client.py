@@ -1,9 +1,6 @@
 import base64
-from typing import List
 
 import dns.resolver
-
-from server import decode_from_base32
 
 
 class Tool:
