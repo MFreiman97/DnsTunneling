@@ -1,19 +1,17 @@
 import base64
-
-
-#class Server
+# class Server
 from os import system
 from typing import List
 
-import  scapy
 from scapy.layers.dns import DNSQR, DNS
 from scapy.layers.inet import UDP, IP
 from scapy.sendrecv import sniff
 
-queries_liste = {}#Global variable
+queries_liste = {}  # Global variable
 quiet = False
 databaseConn = None
 databaseCursor = None
+
 
 def decode_from_base32(enc_mes):  #
     enc_mes = enc_mes.replace('.', '')
@@ -23,13 +21,15 @@ def decode_from_base32(enc_mes):  #
     b = str(mes, 'utf-8')
     return b
 
-def write_to_file(lst:List[str]):
-    str=""
+
+def write_to_file(lst: List[str]):
+    str = ""
     for i in range(0, lst.__len__()):
-        lst[i]=decode_from_base32(lst[i])
-        str+=lst[i]
+        lst[i] = decode_from_base32(lst[i])
+        str += lst[i]
     with open("Output.txt", mode="w", encoding="utf-8") as file:
-       file.write(str)
+        file.write(str)
+
 
 def process(pkt):
     global quiet
@@ -84,6 +84,6 @@ def process(pkt):
 
 
 if __name__ == '__main__':
-   lst=list()
-   write_to_file(lst)
-   sniff(filter='udp port 53', store=0, prn=process)
+    lst = list()
+    write_to_file(lst)
+    sniff(filter='udp port 53', store=0, prn=process)
