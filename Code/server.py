@@ -14,8 +14,7 @@ queries_liste = {}#Global variable
 quiet = False
 databaseConn = None
 databaseCursor = None
-
-def decode_from_base32(enc_mes):  #
+def decode_from_base32(enc_mes):
     enc_mes = enc_mes.replace('.', '')
     b = bytes(enc_mes, 'utf-8')
     mes = base64.b32decode(b)
@@ -30,6 +29,15 @@ def write_to_file(lst:List[str]):
         str+=lst[i]
     with open("Output.txt", mode="w", encoding="utf-8") as file:
        file.write(str)
+
+
+def address_contained(x:bytes):
+    x = str(x, 'utf-8')
+    if "legit-domain.demo" in x:
+        return  True
+    return False
+
+
 
 def process(pkt):
     global quiet
@@ -72,18 +80,20 @@ def process(pkt):
             databaseConn.commit()
 
         if not quiet:
-            system('clear')
+            lst = list()
             print("{:15s} | {:15s} | {:15s} | {}".format("IP source", "DNS server", "Count DNS request", "Query"))
             for ip in queries_liste:
                 print("{:15s}".format(ip))  # IP source
                 for query_server in queries_liste[ip]:
                     print(" " * 18 + "{:15s}".format(query_server))  # IP of DNS server
                     for query in queries_liste[ip][query_server]:
-                        print(" " * 36 + "{:19s} {}".format(str(queries_liste[ip][query_server][query]),
-                                                            query))  # Count DNS request | DNS
+                        if(address_contained(query)):
+                            lst.append(query)
+                        print(" " * 36 + "{:19s} {}".format(str(queries_liste[ip][query_server][query]),  query))  # Count DNS request | DNS
+
 
 
 if __name__ == '__main__':
    lst=list()
-   write_to_file(lst)
+#   write_to_file(lst)
    sniff(filter='udp port 53', store=0, prn=process)

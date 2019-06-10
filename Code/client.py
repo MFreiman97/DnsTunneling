@@ -58,6 +58,7 @@ class Client:
 
 
 if __name__ == '__main__':
-    tool = Client(r"C:\Users\מתניה\Functions_For_Project\Text.txt", 5, 15)
+    #tool = Client(r"C:\Users\מתניה\Functions_For_Project\Text.txt", 5, 15)
 
-    tool.send_messages()
+   # tool.send_messages()
+    answers = dns.resolver.query(f'ckawna.legit-domain.com', 'A')
