@@ -19,7 +19,6 @@ def decode_from_base32(enc_mes):
     enc_mes = enc_mes.replace('.', '')
     b = bytes(enc_mes, 'utf-8')
     mes = base64.b32decode(b)
-    return mes
     b = str(mes, 'utf-8')
     return b
 
