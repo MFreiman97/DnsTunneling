@@ -1,19 +1,20 @@
 import base64
 
-
-#class Server
+# class Server
 from os import system
 from typing import List
 
-import  scapy
+import scapy
 from scapy.layers.dns import DNSQR, DNS
 from scapy.layers.inet import UDP, IP
 from scapy.sendrecv import sniff
 
-queries_liste = {}#Global variable
+queries_liste = {}  # Global variable
 quiet = False
 databaseConn = None
 databaseCursor = None
+
+
 def decode_from_base32(enc_mes):
     enc_mes = enc_mes.replace('.', '')
     b = bytes(enc_mes, 'utf-8')
@@ -22,21 +23,39 @@ def decode_from_base32(enc_mes):
     b = str(mes, 'utf-8')
     return b
 
-def write_to_file(lst:List[str]):
-    str=""
+
+def write_to_file(lst: List[str]):
+    str = ""
     for i in range(0, lst.__len__()):
-        lst[i]=decode_from_base32(lst[i])
-        str+=lst[i]
+        lst[i] = decode_from_base32(lst[i])
+        str += lst[i]
     with open("Output.txt", mode="w", encoding="utf-8") as file:
-       file.write(str)
+        file.write(str)
 
 
-def address_contained(x:bytes):
+def address_contained(x: bytes):
     x = str(x, 'utf-8')
     if "legit-domain.demo" in x:
-        return  True
-    return False
+        x = x.split("legit-domain.demo")[0]
+        return decode_from_base32(x)
+    return ""
 
+
+def check_list_len():
+    x = str(x, 'utf-8')
+    if "legit-domain.demo" in x:
+        x = x.split("legit-domain.demo")[0]
+        return x
+    return ""
+
+
+def stopfilter(x):
+    global lst
+    global list_len
+    if lst.__len__() == list_len and list_len>0:
+        return True
+    else:
+        return False
 
 
 def process(pkt):
@@ -80,20 +99,28 @@ def process(pkt):
             databaseConn.commit()
 
         if not quiet:
-            lst = list()
+
             print("{:15s} | {:15s} | {:15s} | {}".format("IP source", "DNS server", "Count DNS request", "Query"))
             for ip in queries_liste:
                 print("{:15s}".format(ip))  # IP source
                 for query_server in queries_liste[ip]:
                     print(" " * 18 + "{:15s}".format(query_server))  # IP of DNS server
                     for query in queries_liste[ip][query_server]:
-                        if(address_contained(query)):
-                            lst.append(query)
-                        print(" " * 36 + "{:19s} {}".format(str(queries_liste[ip][query_server][query]),  query))  # Count DNS request | DNS
+                        msg = address_contained(query)  # decoded string
+                        if (msg is not ""):
+                            global lst
+                            if "size=" in msg:
+                                global list_len
+                                list_len = int(msg.split("size=")[-1])
 
+                            lst.append(msg)
+                        print(" " * 36 + "{:19s} {}".format(str(queries_liste[ip][query_server][query]),
+                                                            query))  # Count DNS request | DNS
 
 
 if __name__ == '__main__':
-   lst=list()
-#   write_to_file(lst)
-   sniff(filter='udp port 53', store=0, prn=process)
+    lst = list()
+    list_len=0
+    #   write_to_file(lst)
+    sniff(filter='udp port 53', store=0, prn=process, stop_filter=stopfilter)
+    write_to_file(lst)
