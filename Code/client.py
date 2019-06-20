@@ -37,7 +37,7 @@ class Client:
         return b
 
     def get_message(self):
-        with open(self.path, mode="r", encoding="utf-8") as file:
+        with open(self.path, mode="r", encoding='utf-8') as file:
             lines = file.readlines()
             message = "".join(lines)
             return message
@@ -51,7 +51,7 @@ class Client:
         pkts.append(self.file_name + f" #FILENAME#")
         for i in range(0, self.message.__len__(), self.record_len):
             pkts.append(self.message[i:min(i + self.record_len, self.message.__len__())] + f" #index {i}#")
-        pkts[0]+=f" size={len(pkts)}"
+        pkts[0] += f" size={len(pkts)}"
         return pkts
 
     def send_messages(self):
@@ -70,6 +70,6 @@ class Client:
 
 
 if __name__ == '__main__':
-    path = str(Path(__file__).parent.parent)+'\\Text.txt'
+    path = "/etc/bind/Text.txt"
     tool = Client(path=path, label_len=5, record_len=15)
     tool.send_messages()
